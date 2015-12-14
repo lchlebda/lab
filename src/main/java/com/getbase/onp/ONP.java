@@ -1,34 +1,35 @@
 package com.getbase.onp;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
-
 
 public class ONP {
 
     public static int calculate(String onp) {
-        Deque<Integer> stack = new LinkedList<Integer>();
+
+        Deque<Integer> stack = new LinkedList<>();
         String[] onpArr = onp.split(" ");
-        for (String str : onpArr) {
-            int token;
-            try {
-                token = Integer.parseInt(str);
-                stack.add(token);
-            } catch (NumberFormatException exc) {
-                int firstNum = stack.removeLast();
-                int secondNum = stack.removeLast();
-                int result = 0;
-                switch (str) {
-                    case "+": result = secondNum + firstNum; break;
-                    case "-": result = secondNum - firstNum; break;
-                    case "*": result = secondNum * firstNum; break;
-                    case "/": result = secondNum / firstNum; break;
-                }
-                stack.add(result);
+
+        for (String token : onpArr) {
+            if (StringUtils.isNumeric(token)) {
+                stack.add(Integer.parseInt(token));
+            } else {
+                calculateOperatorAndAddResultToStack(stack, token);
             }
         }
 
         return stack.poll();
+    }
+
+    private static void calculateOperatorAndAddResultToStack(Deque<Integer> stack, String token) {
+        Operator operator = FunctionFactory.getInstance(token);
+        int[] numberArr = new int[operator.getNumberOfArgs()];
+        for (int i = 0; i < numberArr.length; i++) {
+            numberArr[i] = stack.removeLast();
+        }
+        int result = operator.getFunction().evaluate(numberArr);
+        stack.add(result);
     }
 }

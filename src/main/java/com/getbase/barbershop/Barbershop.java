@@ -25,8 +25,6 @@ public class Barbershop {
     private final Condition customerCondition = customerLock.newCondition();
     private final Condition chairsCondition = chairsLock.newCondition();
 
-    private final Queue<Customer> customers = new LinkedList<>();
-
     private final AtomicInteger counter = new AtomicInteger(0);
 
     @SneakyThrows
@@ -58,7 +56,6 @@ public class Barbershop {
         chairsLock.lock();
         try {
             logger.info("Customer {} sit down.", customer.getId());
-            customers.add(customer);
             chairsCondition.await();
             counter.decrementAndGet();
             getHairCut(customer);

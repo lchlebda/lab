@@ -65,7 +65,7 @@ public class Barber implements Runnable {
     @SneakyThrows
     private void cutHair() {
         logger.info("Barber {} is cutting customer's {} hair.", id, client.getId());
-        TimeUnit.SECONDS.sleep(4);
+        TimeUnit.SECONDS.sleep(8);
         client.getBarberLock().lock();
         try {
             client.getBarberCondition().signal();

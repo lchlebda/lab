@@ -1,4 +1,4 @@
-package codility;
+package codility.arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
